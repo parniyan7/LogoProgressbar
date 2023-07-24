@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         val progressBar = findViewById<ProgressbarView>(R.id.customProgressBar)
 
 
-       progressBar.setProgressColor(Color.RED)
+        //progressBar.setProgressColor(Color.RED)
         //progressBar.setMarkerSize(2000f)
         val colors = intArrayOf(
             Color.parseColor("#b3cde0"), // very light blue
@@ -26,16 +26,8 @@ class MainActivity : AppCompatActivity() {
             Color.parseColor("#03396c"), // dark blue
             Color.parseColor("#011f4b"), // very dark blue
         )
-       // progressBar.setProgressColorPalette(colors)
-        val colorss = listOf(Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA)
-        val rainbowColors = intArrayOf(
-            Color.RED,
-            Color.YELLOW,
-            Color.GREEN,
-            Color.BLUE,
-            Color.MAGENTA
-        )
-        progressBar.setRainbowProgressBar(rainbowColors)
+        // progressBar.setProgressColorPalette(colors)
+        progressBar.setProgressColorPalette(colors)
 
         progressBar.setBorderColor(Color.BLACK)
         progressBar.setBorderSize(2f)

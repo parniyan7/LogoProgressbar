@@ -89,22 +89,8 @@ class ProgressbarView(context: Context, attrs: AttributeSet?) : View(context, at
         val progressHeight = progressThickness.coerceAtLeast(1f)
 
 
-        // Draw the progress bar if it was rainBow Type
-        if (useRainBowColor) {
-            useRainBowColor = false
-            // Draw the progress bar
-            if (progressColors.isNotEmpty()) {
-                // Draw the progress bar
-                val progressColor = getProgressColor(progressColors.toList(), progress / 100)
-                val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    style = Paint.Style.FILL
-                    color = progressColor
-                }
-                canvas?.drawRect(0f, 0f, progressWidth, height, progressPaint)
-            }
 
-        } else {
-            // Draw the progress bar if it was palette type
+            // Draw the progress bar
             if (progressColors.isNotEmpty()) {
                 val colorPositions = FloatArray(progressColors.size)
                 val colorStep = 1f / (progressColors.size - 1)
@@ -124,7 +110,7 @@ class ProgressbarView(context: Context, attrs: AttributeSet?) : View(context, at
             } else {
                 progressPaint.color = progressColor
             }
-        }
+
 
 
         // Draw the border around the progress bar
@@ -182,46 +168,6 @@ class ProgressbarView(context: Context, attrs: AttributeSet?) : View(context, at
         )
     }
 
-
-    private fun getProgressColor(colors: List<Int>, progress: Float): Int {
-        if (colors.isEmpty()) {
-            return Color.BLUE
-        }
-
-        val position = progress * (colors.size - 1)
-        val startIndex = position.toInt()
-        val endIndex = startIndex + 1
-        val startColor = colors[startIndex]
-        val endColor = if (endIndex < colors.size) colors[endIndex] else startColor
-        val fraction = position - startIndex
-        return blendColors(startColor, endColor, fraction)
-    }
-
-    private fun blendColors(startColor: Int, endColor: Int, fraction: Float): Int {
-        val startA = Color.alpha(startColor)
-        val startR = Color.red(startColor)
-        val startG = Color.green(startColor)
-        val startB = Color.blue(startColor)
-
-        val endA = Color.alpha(endColor)
-        val endR = Color.red(endColor)
-        val endG = Color.green(endColor)
-        val endB = Color.blue(endColor)
-
-        val blendedA = (startA * (1 - fraction) + endA * fraction).toInt()
-        val blendedR = (startR * (1 - fraction) + endR * fraction).toInt()
-        val blendedG = (startG * (1 - fraction) + endG * fraction).toInt()
-        val blendedB = (startB * (1 - fraction) + endB * fraction).toInt()
-
-        return Color.argb(blendedA, blendedR, blendedG, blendedB)
-    }
-
-
-    fun setRainbowProgressBar(colors: IntArray) {
-        progressColors = colors
-        useRainBowColor = true
-        invalidate()
-    }
 
     fun setProgressColor(color: Int) {
         progressColor = color
