@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.parniyan.progressbar.ProgressbarView
+    <com.parniyan.logoprogressbar.ProgressbarView
         android:id="@+id/customProgressBar"
         android:layout_width="match_parent"
         android:layout_height="40dp"

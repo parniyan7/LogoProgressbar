@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomProgressBar">
+        <attr name="progressColor" format="color" />
+        <attr name="progressThickness" format="dimension" />
+        <attr name="markerDrawable" format="reference" />
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="markerSize" format="dimension" />
+        <attr name="progress" format="float" />
+        <attr name="borderSize" format="dimension" />
+        <attr name="borderColor" format="color" />
+        <attr name="progressColors" format="reference" />
+    </declare-styleable>
+</resources>

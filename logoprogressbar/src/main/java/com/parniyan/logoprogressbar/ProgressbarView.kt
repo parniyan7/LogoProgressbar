@@ -1,6 +1,7 @@
-package com.parniyan.progressbar
+package com.parniyan.logoprogressbar
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -8,8 +9,10 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Shader
+import android.graphics.SweepGradient
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.core.graphics.toRect
 
@@ -25,6 +28,7 @@ class ProgressbarView(context: Context, attrs: AttributeSet?) : View(context, at
     private var textSize: Float = 14f
     private var borderSize: Float = 0f
     private var borderColor: Int = Color.TRANSPARENT
+    private var useRainBowColor: Boolean = false
 
     private val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -74,6 +78,7 @@ class ProgressbarView(context: Context, attrs: AttributeSet?) : View(context, at
         borderPaint.style = Paint.Style.STROKE
     }
 
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
@@ -83,26 +88,44 @@ class ProgressbarView(context: Context, attrs: AttributeSet?) : View(context, at
         val progressWidth = progress / 100 * width
         val progressHeight = progressThickness.coerceAtLeast(1f)
 
-        // Draw the progress bar
-        if (progressColors.isNotEmpty()) {
-            val colorPositions = FloatArray(progressColors.size)
-            val colorStep = 1f / (progressColors.size - 1)
-            for (i in progressColors.indices) {
-                colorPositions[i] = i * colorStep
+
+        // Draw the progress bar if it was rainBow Type
+        if (useRainBowColor) {
+            useRainBowColor = false
+            // Draw the progress bar
+            if (progressColors.isNotEmpty()) {
+                // Draw the progress bar
+                val progressColor = getProgressColor(progressColors.toList(), progress / 100)
+                val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    style = Paint.Style.FILL
+                    color = progressColor
+                }
+                canvas?.drawRect(0f, 0f, progressWidth, height, progressPaint)
             }
-            val progressGradient = LinearGradient(
-                0f,
-                height / 2,
-                width,
-                height / 2,
-                progressColors,
-                colorPositions,
-                Shader.TileMode.CLAMP
-            )
-            progressPaint.shader = progressGradient
+
         } else {
-            progressPaint.color = progressColor
+            // Draw the progress bar if it was palette type
+            if (progressColors.isNotEmpty()) {
+                val colorPositions = FloatArray(progressColors.size)
+                val colorStep = 1f / (progressColors.size - 1)
+                for (i in progressColors.indices) {
+                    colorPositions[i] = i * colorStep
+                }
+                val progressGradient = LinearGradient(
+                    0f,
+                    height / 2,
+                    width,
+                    height / 2,
+                    progressColors,
+                    colorPositions,
+                    Shader.TileMode.CLAMP
+                )
+                progressPaint.shader = progressGradient
+            } else {
+                progressPaint.color = progressColor
+            }
         }
+
 
         // Draw the border around the progress bar
         if (borderSize > 0) {
@@ -157,6 +180,47 @@ class ProgressbarView(context: Context, attrs: AttributeSet?) : View(context, at
             height / 2 + textPaint.textSize / 2,
             textPaint
         )
+    }
+
+
+    private fun getProgressColor(colors: List<Int>, progress: Float): Int {
+        if (colors.isEmpty()) {
+            return Color.BLUE
+        }
+
+        val position = progress * (colors.size - 1)
+        val startIndex = position.toInt()
+        val endIndex = startIndex + 1
+        val startColor = colors[startIndex]
+        val endColor = if (endIndex < colors.size) colors[endIndex] else startColor
+        val fraction = position - startIndex
+        return blendColors(startColor, endColor, fraction)
+    }
+
+    private fun blendColors(startColor: Int, endColor: Int, fraction: Float): Int {
+        val startA = Color.alpha(startColor)
+        val startR = Color.red(startColor)
+        val startG = Color.green(startColor)
+        val startB = Color.blue(startColor)
+
+        val endA = Color.alpha(endColor)
+        val endR = Color.red(endColor)
+        val endG = Color.green(endColor)
+        val endB = Color.blue(endColor)
+
+        val blendedA = (startA * (1 - fraction) + endA * fraction).toInt()
+        val blendedR = (startR * (1 - fraction) + endR * fraction).toInt()
+        val blendedG = (startG * (1 - fraction) + endG * fraction).toInt()
+        val blendedB = (startB * (1 - fraction) + endB * fraction).toInt()
+
+        return Color.argb(blendedA, blendedR, blendedG, blendedB)
+    }
+
+
+    fun setRainbowProgressBar(colors: IntArray) {
+        progressColors = colors
+        useRainBowColor = true
+        invalidate()
     }
 
     fun setProgressColor(color: Int) {

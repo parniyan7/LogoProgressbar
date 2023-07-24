@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
+import com.parniyan.logoprogressbar.ProgressbarView
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -14,22 +15,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val progressBar = findViewById<ProgressbarView>(R.id.customProgressBar)
+
+
        progressBar.setProgressColor(Color.RED)
         //progressBar.setMarkerSize(2000f)
         val colors = intArrayOf(
-            Color.parseColor("#FF0000"), // Red
-            Color.parseColor("#FFFF00"), // Yellow
-            Color.parseColor("#00FF00"), // Green
-            Color.parseColor("#00FFFF"), // Cyan
-            Color.parseColor("#0000FF"), // Blue
-            Color.parseColor("#FF00FF")  // Magenta
+            Color.parseColor("#b3cde0"), // very light blue
+            Color.parseColor("#6497b1"), // light blue
+            Color.parseColor("#005b96"), // blue
+            Color.parseColor("#03396c"), // dark blue
+            Color.parseColor("#011f4b"), // very dark blue
         )
-        progressBar.setProgressColorPalette(colors)
+       // progressBar.setProgressColorPalette(colors)
+        val colorss = listOf(Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA)
+        val rainbowColors = intArrayOf(
+            Color.RED,
+            Color.YELLOW,
+            Color.GREEN,
+            Color.BLUE,
+            Color.MAGENTA
+        )
+        progressBar.setRainbowProgressBar(rainbowColors)
+
         progressBar.setBorderColor(Color.BLACK)
         progressBar.setBorderSize(2f)
         progressBar.setTextColor(Color.BLACK)
         progressBar.setTextSize(24f)
-        //progressBar.setProgressColors(colors)
+
         val markerDrawable = ContextCompat.getDrawable(this, R.drawable.cat)
         if (markerDrawable != null) {
             progressBar.setMarkerDrawable(markerDrawable)
@@ -46,4 +58,4 @@ class MainActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
     }
-    }
+}
